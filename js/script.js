@@ -1,7 +1,7 @@
 function runTypingEffect() {
-  const text = 'Eros Glauco Koller';
+  const text = 'Eros Koller';
   const typingElement = document.getElementById('typing-text');
-  const typingDelay = 100;
+  const typingDelay = 150;
 
   typeText(text, typingElement, typingDelay);
 }
