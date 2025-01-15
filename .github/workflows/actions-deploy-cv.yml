@@ -1,0 +1,45 @@
+name: Deployment
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: Cache dependencies
+        uses: ./.github/actions/cache-deps
+      - name: Build website
+        run: npm run sass:build
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist-files
+          path: dist
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: Get build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: dist-files
+          path: ./
+      # - name: Output contents
+      #   run: ls
+      # - name: Deploy site
+      #   id: deploy
+      #   uses: ./.github/actions/deploy-s3-javascript
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #   with:
+      #     bucket: gh-custom-action-static-website-eros
+      #     bucket-region: us-east-1
+      #     dist-folder: ./dist
+      # - name: Output website url
+      #   run: echo ${{ steps.deploy.outputs.website-url }}
